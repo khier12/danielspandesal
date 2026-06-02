@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malunggay Pandesal — A Filipino Bread Story</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:      #1a0800;
+      --mahogany: #3d1200;
+      --hickory:  #6b2400;
+      --caramel:  #a84800;
+      --honey:    #d4780a;
+      --gold:     #e8a820;
+      --wheat:    #f5cc60;
+      --cream:    #fef7e8;
+      --ivory:    #fffdf6;
+      --sage:     #1e4d32;
+      --moss:     #2d6b46;
+      --mint:     #52a870;
+      --white:    #ffffff;
+      --text:     #1a0800;
+      --text2:    #7a3c00;
+      --text3:    #b06000;
+      --border:   #f0d898;
+      --border2:  #e8c070;
+      --shadow:   0 4px 32px rgba(100,40,0,.13);
+      --shadow-lg:0 24px 80px rgba(100,40,0,.22);
+      --r:        22px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--ivory);
+      color: var(--text);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ══ CUSTOM CURSOR ══ */
+    .cursor {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--gold);
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: transform .12s ease, width .2s, height .2s, background .2s;
+      mix-blend-mode: multiply;
+    }
+    .cursor.hover { width: 40px; height: 40px; background: var(--wheat); }
+    .cursor-ring {
+      width: 38px; height: 38px;
+      border: 1.5px solid var(--honey);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      transition: transform .35s ease;
+      opacity: .5;
+    }
+    a, button, .gallery-item, .ingredient-item, .nav-pill { cursor: none; }
+
+    /* ══ PROGRESS BAR ══ */
+    .progress-bar {
+      position: fixed; top: 0; left: 0;
+      height: 3px; z-index: 9997;
+      background: linear-gradient(90deg, var(--mahogany), var(--honey), var(--wheat));
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: transform .1s linear;
+    }
+
+    /* ══ HERO ══ */
+    .hero {
+      position: relative;
+      height: 100vh; min-height: 620px;
+      display: grid; place-items: center;
+      text-align: center; overflow: hidden;
+    }
+
+    .hero-img {
+      position: absolute; inset: -8%;
+      background: url('https://seasiderecipes.com/wp-content/uploads/moringa-bread.jpg') center/cover no-repeat;
+      animation: slow-zoom 28s ease-in-out infinite alternate;
+      filter: brightness(1.06) saturate(1.18) contrast(1.04);
+      will-change: transform;
+    }
+    @keyframes slow-zoom {
+      from { transform: scale(1) translateY(0); }
+      to   { transform: scale(1.14) translateY(-2%); }
+    }
+
+    /* layered warmth treatment */
+    .hero-grade {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 100% 70% at 50% 55%, rgba(200,90,0,.18) 0%, transparent 55%),
+        linear-gradient(180deg,
+          rgba(15,5,0,.62) 0%,
+          rgba(60,22,0,.32) 30%,
+          rgba(140,60,0,.24) 62%,
+          rgba(10,3,0,.78) 100%
+        );
+    }
+
+    /* shimmering light leak */
+    .hero-grade::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(118deg,
+        transparent 25%,
+        rgba(255,210,80,.05) 45%,
+        rgba(255,200,60,.08) 52%,
+        transparent 68%
+      );
+      animation: light-leak 8s ease-in-out infinite;
+    }
+    @keyframes light-leak { 0%,100%{opacity:0;transform:translateX(-10%)} 50%{opacity:1;transform:translateX(10%)} }
+
+    /* ── hero content ── */
+    .hero-inner {
+      position: relative; z-index: 2;
+      padding: 0 24px; max-width: 820px;
+    }
+
+    .hero-kicker {
+      display: inline-flex; align-items: center; gap: 10px;
+      border: 1px solid rgba(240,200,80,.3);
+      background: rgba(240,180,20,.12);
+      backdrop-filter: blur(12px);
+      color: var(--wheat);
+      font-size: .68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 3px;
+      padding: 7px 22px; border-radius: 99px;
+      margin-bottom: 28px;
+      animation: reveal-up .8s ease both;
+    }
+    .hero-kicker::before,
+    .hero-kicker::after { content:'✦'; font-size:.55rem; opacity:.7; }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900; line-height: 1;
+      color: var(--white);
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+      animation: reveal-up .8s ease .1s both;
+    }
+    .hero-title .line1 {
+      font-size: clamp(3.2rem, 9vw, 7rem);
+      display: block;
+      text-shadow: 0 6px 40px rgba(0,0,0,.35);
+    }
+    .hero-title .line2 {
+      font-size: clamp(3.8rem, 11vw, 8.5rem);
+      display: block;
+      font-style: italic;
+      background: linear-gradient(135deg, var(--wheat) 0%, var(--gold) 50%, #ffb830 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      filter: drop-shadow(0 4px 24px rgba(220,160,0,.4));
+    }
+
+    .hero-tagline {
+      font-size: clamp(.95rem, 2vw, 1.15rem);
+      font-weight: 300; line-height: 1.7;
+      color: rgba(255,255,255,.68);
+      max-width: 480px; margin: 20px auto 40px;
+      animation: reveal-up .8s ease .2s both;
+    }
+
+    .hero-pills {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;
+      animation: reveal-up .8s ease .3s both;
+    }
+    .hero-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(10px);
+      border-radius: 99px; padding: 10px 22px;
+    }
+    .hero-pill-val { font-size: 1.1rem; font-weight: 800; color: var(--wheat); line-height: 1; }
+    .hero-pill-lbl { font-size: .65rem; font-weight: 600; color: rgba(255,255,255,.48); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ── steam ── */
+    .steam-row {
+      position: absolute; bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 18px; z-index: 2;
+    }
+    .s { width: 4px; border-radius: 4px; background: rgba(255,255,255,.16); filter: blur(2px); animation: s-rise ease-in-out infinite; }
+    .s:nth-child(1){height:52px;animation-duration:2.8s;animation-delay:0s}
+    .s:nth-child(2){height:70px;animation-duration:3.2s;animation-delay:.7s}
+    .s:nth-child(3){height:44px;animation-duration:2.5s;animation-delay:1.4s}
+    .s:nth-child(4){height:60px;animation-duration:3s;animation-delay:.3s}
+    @keyframes s-rise {
+      0%  {transform:translateY(0) scaleX(1);opacity:0}
+      25% {opacity:.7}
+      100%{transform:translateY(-90px) scaleX(3);opacity:0}
+    }
+
+    .hero-scroll {
+      position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+      z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: rgba(255,255,255,.32); font-size: .62rem; letter-spacing: 2.5px; text-transform: uppercase;
+    }
+    .scroll-mouse {
+      width: 22px; height: 34px;
+      border: 1.5px solid rgba(255,255,255,.25); border-radius: 11px;
+      display: flex; justify-content: center; padding-top: 6px;
+    }
+    .scroll-wheel {
+      width: 3px; height: 7px; border-radius: 3px;
+      background: rgba(255,255,255,.5);
+      animation: wheel 1.8s ease-in-out infinite;
+    }
+    @keyframes wheel { 0%,100%{transform:translateY(0);opacity:1} 60%{transform:translateY(8px);opacity:0} }
+
+    /* ══ STICKY NAV ══ */
+    .snav {
+      position: sticky; top: 0; z-index: 500;
+      background: rgba(255,253,246,.93); backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      padding: 11px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 2px 20px rgba(100,40,0,.07);
+    }
+    .snav-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem; font-weight: 700;
+      color: var(--hickory); letter-spacing: -.3px;
+    }
+    .snav-brand span { font-style: italic; color: var(--honey); }
+    .snav-links { display: flex; gap: 6px; }
+    .snav-btn {
+      padding: 6px 16px; border-radius: 99px;
+      border: 1.5px solid var(--border);
+      background: var(--white); color: var(--caramel);
+      font-size: .76rem; font-weight: 700;
+      transition: all .2s; font-family: 'Inter', sans-serif;
+    }
+    .snav-btn:hover, .snav-btn.active {
+      background: linear-gradient(135deg, var(--hickory), var(--honey));
+      color: var(--white); border-color: transparent;
+      box-shadow: 0 4px 16px rgba(180,80,0,.3);
+      transform: translateY(-2px);
+    }
+
+    /* ══ MAIN CONTENT ══ */
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 980px; margin: 0 auto;
+      padding: 0 22px 100px;
+      display: flex; flex-direction: column; gap: 100px;
+    }
+
+    /* ══ STORY SECTION ══ */
+    .story {
+      display: grid; grid-template-columns: 1fr 420px; gap: 64px; align-items: center;
+      padding-top: 80px;
+    }
+    .story-text .overline {
+      font-size: .68rem; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--honey);
+      display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+    }
+    .story-text .overline::before { content:''; width: 28px; height: 1.5px; background: var(--honey); }
+    .story-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 900;
+      color: var(--mahogany); line-height: 1.15; letter-spacing: -.5px;
+      margin-bottom: 20px;
+    }
+    .story-text h2 em { font-style: italic; color: var(--honey); }
+    .story-text p {
+      font-size: 1rem; line-height: 1.85; color: var(--text2);
+      margin-bottom: 16px; font-weight: 400;
+    }
+    .pull-quote {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.35rem; font-style: italic; line-height: 1.5;
+      color: var(--hickory);
+      border-left: 4px solid var(--gold);
+      padding: 12px 0 12px 22px;
+      margin: 28px 0;
+    }
+    .pull-quote::before { content: '\201C'; font-size: 3rem; color: var(--wheat); line-height: 0; vertical-align: -.6em; margin-right: 4px; }
+
+    .story-stars { display: flex; align-items: center; gap: 6px; margin-top: 24px; }
+    .star { color: var(--gold); font-size: 1.1rem; }
+    .star-label { font-size: .82rem; color: var(--text2); font-weight: 600; }
+
+    .story-img-wrap {
+      position: relative; border-radius: 24px; overflow: hidden;
+      height: 520px;
+      box-shadow: var(--shadow-lg);
+    }
+    .story-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform .6s ease, filter .6s ease;
+      filter: brightness(1.03) saturate(1.12);
+    }
+    .story-img-wrap:hover img { transform: scale(1.05); filter: brightness(1.08) saturate(1.2); }
+
+    /* golden frame */
+    .story-img-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(80,30,0,.3) 100%);
+      z-index: 1; pointer-events: none;
+    }
+    /* corner accent */
+    .story-img-wrap::after {
+      content: '';
+      position: absolute; inset: 10px;
+      border: 1px solid rgba(240,190,60,.25); border-radius: 18px;
+      z-index: 1; pointer-events: none;
+    }
+    .story-badge {
+      position: absolute; bottom: 20px; left: 20px; z-index: 2;
+      background: rgba(20,5,0,.7); backdrop-filter: blur(12px);
+      border: 1px solid rgba(240,190,60,.25);
+      border-radius: 14px; padding: 12px 18px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .story-badge-icon { font-size: 1.6rem; }
+    .story-badge-text strong { display: block; font-size: .82rem; color: var(--wheat); font-weight: 700; }
+    .story-badge-text span  { font-size: .72rem; color: rgba(255,255,255,.45); }
+
+    /* ══ GALLERY ══ */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr;
+      grid-template-rows: 260px 220px;
+      gap: 14px;
+      border-radius: var(--r); overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .gi {
+      position: relative; overflow: hidden;
+      background: var(--wheat);
+    }
+    .gi:first-child { grid-row: span 2; }
+    .gi img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform .55s ease, filter .55s ease;
+      filter: saturate(1.08);
+    }
+    .gi:hover img { transform: scale(1.09); filter: saturate(1.3) brightness(1.05); }
+
+    /* warm color grade on each photo */
+    .gi::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 45%, rgba(60,20,0,.55) 100%);
+      z-index: 1;
+    }
+    .gi::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(80,30,0,.25) 100%);
+      z-index: 1; pointer-events: none;
+    }
+    .gi-label {
+      position: absolute; bottom: 14px; left: 14px; z-index: 2;
+      color: var(--white); font-size: .8rem; font-weight: 700;
+      opacity: 0; transform: translateY(6px);
+      transition: all .3s ease;
+      text-shadow: 0 2px 8px rgba(0,0,0,.4);
+    }
+    .gi:hover .gi-label { opacity: 1; transform: translateY(0); }
+
+    .flavor-tags {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-top: 22px;
+    }
+    .ftag {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 99px; padding: 8px 18px;
+      font-size: .83rem; font-weight: 600; color: var(--text2);
+      box-shadow: var(--shadow); transition: all .22s;
+    }
+    .ftag:hover {
+      background: var(--cream);
+      border-color: var(--border2);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(100,40,0,.14);
+    }
+
+    /* ══ RECIPE ══ */
+    .recipe-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+    }
+    .rbox {
+      background: var(--white);
+      border-radius: var(--r);
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .rbox:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+    .rbox-head {
+      padding: 22px 28px;
+      background: linear-gradient(135deg, var(--mahogany) 0%, var(--hickory) 55%, var(--caramel) 100%);
+      display: flex; align-items: center; gap: 12px; position: relative; overflow: hidden;
+    }
+    .rbox-head::after {
+      content: '';
+      position: absolute; right: -20px; top: -20px;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: rgba(255,200,80,.08);
+    }
+    .rbox-head h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem; font-weight: 700; color: var(--white);
+    }
+    .rbox-head p { font-size: .74rem; color: rgba(255,255,255,.5); margin-top: 2px; }
+    .rbox-body { padding: 22px 24px; }
+
+    .ing {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 14px; border-radius: 12px;
+      border: 1.5px solid transparent;
+      background: var(--cream);
+      margin-bottom: 8px;
+      transition: all .22s; cursor: default;
+    }
+    .ing:hover {
+      background: var(--ivory);
+      border-color: var(--border2);
+      transform: translateX(6px);
+      box-shadow: 0 4px 16px rgba(100,40,0,.08);
+    }
+    .ing-e { font-size: 1.15rem; flex-shrink: 0; width: 28px; text-align: center; }
+    .ing-name { font-size: .92rem; font-weight: 600; color: var(--text); flex: 1; }
+    .ing-amt {
+      font-size: .78rem; font-weight: 700; color: var(--text3);
+      background: var(--cream); border: 1px solid var(--border);
+      padding: 2px 9px; border-radius: 99px; flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    /* steps */
+    .step {
+      display: flex; gap: 18px; margin-bottom: 26px; position: relative;
+    }
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute; left: 20px; top: 48px; width: 2px; bottom: -12px;
+      background: linear-gradient(180deg, var(--wheat) 0%, transparent 100%);
+    }
+    .step-n {
+      min-width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--hickory), var(--honey));
+      color: var(--white); font-size: .84rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(160,80,0,.32), 0 0 0 4px var(--cream);
+      margin-top: 2px; transition: transform .2s;
+    }
+    .step:hover .step-n { transform: scale(1.12); }
+    .step-body { padding-top: 8px; }
+    .step-body strong {
+      display: flex; align-items: center; gap: 7px;
+      font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: 5px;
+    }
+    .step-body p { font-size: .89rem; color: var(--text2); line-height: 1.65; }
+    .step-time {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: .7rem; font-weight: 700; color: var(--honey);
+      background: var(--cream); border: 1px solid var(--border);
+      padding: 2px 9px; border-radius: 99px; margin-top: 7px;
+    }
+
+    /* chef tip */
+    .chef-tip {
+      margin-top: 32px;
+      background: linear-gradient(135deg, #fffbf0, #fef6dc);
+      border: 2px solid var(--wheat);
+      border-radius: var(--r); padding: 22px 26px;
+      display: flex; gap: 16px; align-items: flex-start;
+      box-shadow: 0 8px 32px rgba(200,140,0,.1);
+      position: relative; overflow: hidden;
+    }
+    .chef-tip::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--honey), var(--gold), var(--wheat));
+    }
+    .tip-emoji { font-size: 2rem; animation: tip-rock 3.5s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes tip-rock { 0%,100%{transform:rotate(0)} 30%{transform:rotate(-10deg)} 70%{transform:rotate(10deg)} }
+    .chef-tip-content strong {
+      font-size: .78rem; font-weight: 800; color: var(--hickory);
+      text-transform: uppercase; letter-spacing: 1.2px; display: block; margin-bottom: 6px;
+    }
+    .chef-tip-content p { font-size: .9rem; color: var(--text2); line-height: 1.7; }
+
+    /* ══ NUTRITION ══ */
+    .nut-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+    }
+    .nut-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r); padding: 28px 16px 22px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      position: relative; overflow: hidden;
+      transition: transform .28s, box-shadow .28s;
+    }
+    .nut-card:hover { transform: translateY(-7px); box-shadow: var(--shadow-lg); }
+    .nut-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    }
+    .nut-card:nth-child(1)::before{background:linear-gradient(90deg,#ff6b35,#ff9a00)}
+    .nut-card:nth-child(2)::before{background:linear-gradient(90deg,#56ab2f,#a8e063)}
+    .nut-card:nth-child(3)::before{background:linear-gradient(90deg,#f7971e,#ffd200)}
+    .nut-card:nth-child(4)::before{background:linear-gradient(90deg,#834d9b,#d04ed6)}
+
+    .nut-icon { font-size: 2rem; display: block; margin-bottom: 10px; }
+    .nut-val {
+      font-size: 2.4rem; font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, var(--hickory), var(--honey));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .nut-unit { font-size: .78rem; font-weight: 700; color: var(--text3); }
+    .nut-lbl { font-size: .75rem; color: var(--text2); font-weight: 600; margin-top: 8px; }
+    .nut-bar {
+      height: 5px; border-radius: 99px;
+      background: var(--cream); margin-top: 12px; overflow: hidden;
+    }
+    .nut-bar-fill {
+      height: 100%; border-radius: 99px;
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 1.2s cubic-bezier(.22,1,.36,1);
+    }
+    .nut-card:nth-child(1) .nut-bar-fill{background:linear-gradient(90deg,#ff6b35,#ff9a00)}
+    .nut-card:nth-child(2) .nut-bar-fill{background:linear-gradient(90deg,#56ab2f,#a8e063)}
+    .nut-card:nth-child(3) .nut-bar-fill{background:linear-gradient(90deg,#f7971e,#ffd200)}
+    .nut-card:nth-child(4) .nut-bar-fill{background:linear-gradient(90deg,#834d9b,#d04ed6)}
+
+    /* ══ FOOTER ══ */
+    footer {
+      background: linear-gradient(160deg, var(--ink) 0%, #2a0d00 100%);
+      padding: 64px 24px 48px; text-align: center;
+      color: rgba(255,255,255,.3);
+      position: relative; overflow: hidden;
+    }
+    footer::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(180,80,0,.12) 0%, transparent 60%);
+    }
+    .footer-inner { position: relative; z-index: 1; }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-style: italic;
+      background: linear-gradient(135deg, var(--wheat), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 10px;
+    }
+    .footer-sub { font-size: .82rem; color: rgba(255,255,255,.28); margin-bottom: 28px; }
+    .footer-line {
+      width: 56px; height: 1px; margin: 0 auto 24px;
+      background: linear-gradient(90deg, transparent, rgba(240,190,60,.3), transparent);
+    }
+    .footer-bottom { font-size: .78rem; color: rgba(255,255,255,.22); }
+    .footer-bottom a { color: var(--wheat); text-decoration: none; transition: color .2s; }
+    .footer-bottom a:hover { color: var(--white); }
+
+    /* ══ SHARED ══ */
+    .sec-kicker {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: .68rem; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--honey);
+      margin-bottom: 14px;
+    }
+    .sec-kicker::before,.sec-kicker::after { content:'—'; opacity:.4; }
+    .sec-head { text-align: center; margin-bottom: 40px; }
+    .sec-head h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 900;
+      color: var(--mahogany); letter-spacing: -.5px; line-height: 1.15;
+    }
+    .sec-head p { color: var(--text2); font-size: .97rem; margin-top: 10px; }
+
+    /* reveal */
+    .rv   { opacity:0;transform:translateY(28px);transition:opacity .75s ease,transform .75s ease; }
+    .rvl  { opacity:0;transform:translateX(-28px);transition:opacity .7s ease,transform .7s ease; }
+    .rvr  { opacity:0;transform:translateX(28px);transition:opacity .7s ease,transform .7s ease; }
+    .rv.on,.rvl.on,.rvr.on { opacity:1;transform:translate(0); }
+
+    @keyframes reveal-up { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+    /* responsive */
+    @media(max-width:760px){
+      .story { grid-template-columns:1fr; }
+      .story-img-wrap { height:300px; }
+      .gallery-grid { grid-template-columns:1fr 1fr; grid-template-rows:auto; }
+      .gi:first-child { grid-column:span 2; height:220px; }
+      .gi { height:160px; }
+      .recipe-grid { grid-template-columns:1fr; }
+      .nut-grid { grid-template-columns:repeat(2,1fr); }
+      .snav-brand { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- cursor -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- scroll progress -->
+<div class="progress-bar" id="prog"></div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-img" id="hero-img"></div>
+  <div class="hero-grade"></div>
+  <div class="steam-row">
+    <div class="s"></div><div class="s"></div><div class="s"></div><div class="s"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-kicker">Filipino Comfort Food</div>
+    <h1 class="hero-title">
+      <span class="line1">Malunggay</span>
+      <span class="line2">Pandesal</span>
+    </h1>
+    <p class="hero-tagline">Soft, golden, freshly baked rolls kissed by moringa — a taste of home in every warm bite.</p>
+    <div class="hero-pills">
+      <div class="hero-pill">
+        <div>
+          <div class="hero-pill-val">45m</div>
+          <div class="hero-pill-lbl">Total Time</div>
+        </div>
+      </div>
+      <div class="hero-pill">
+        <div>
+          <div class="hero-pill-val">12</div>
+          <div class="hero-pill-lbl">Pieces</div>
+        </div>
+      </div>
+      <div class="hero-pill">
+        <div>
+          <div class="hero-pill-val">Easy</div>
+          <div class="hero-pill-lbl">Difficulty</div>
+        </div>
+      </div>
+      <div class="hero-pill">
+        <div>
+          <div class="hero-pill-val">⭐4.9</div>
+          <div class="hero-pill-lbl">Rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ══ NAV ══ -->
+<nav class="snav" id="snav">
+  <div class="snav-brand">Malunggay <span>Pandesal</span></div>
+  <div class="snav-links">
+    <button class="snav-btn active" onclick="goTo('story')">Story</button>
+    <button class="snav-btn" onclick="goTo('gallery')">Gallery</button>
+    <button class="snav-btn" onclick="goTo('recipe')">Recipe</button>
+    <button class="snav-btn" onclick="goTo('nutrition')">Nutrition</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ══ STORY ══ -->
+  <section id="story" class="story">
+    <div class="story-text rvl">
+      <div class="overline">The Story Behind It</div>
+      <h2>A Filipino Classic, <em>Reimagined</em></h2>
+      <p>Pandesal — the soft, cloud-like bread roll dusted in breadcrumbs — has graced Filipino breakfast tables for generations. But this version does something beautiful: it weaves in <strong>malunggay</strong>, the miracle moringa leaf, adding a gentle earthiness and a gorgeous green colour to every bite.</p>
+      <div class="pull-quote">The most nourishing things come from the simplest ingredients.</div>
+      <p>Packed with vitamins A, C, and iron, malunggay transforms everyday pandesal into a wholesome superfood bread you can feel good about feeding your family.</p>
+      <div class="story-stars">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        <span class="star-label">4.9 · 2,400 home bakers</span>
+      </div>
+    </div>
+    <div class="story-img-wrap rvr">
+      <img src="https://seasiderecipes.com/wp-content/uploads/moringa-bread.jpg" alt="Malunggay Pandesal" style="object-position:center 30%">
+      <div class="story-badge">
+        <div class="story-badge-icon">🌿</div>
+        <div class="story-badge-text">
+          <strong>Superfood Bread</strong>
+          <span>Moringa-enriched</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ GALLERY ══ -->
+  <section id="gallery">
+    <div class="sec-head rv">
+      <div class="sec-kicker">Photo Gallery</div>
+      <h2>Fresh from the Oven</h2>
+      <p>Golden crust, soft green crumb, warm from the bake — irresistible</p>
+    </div>
+    <div class="gallery-grid rv">
+      <div class="gi">
+        <img src="https://seasiderecipes.com/wp-content/uploads/moringa-bread.jpg" alt="Malunggay Pandesal main shot">
+        <div class="gi-label">🍞 Just Out of the Oven</div>
+      </div>
+      <div class="gi">
+        <img src="https://seasiderecipes.com/wp-content/uploads/moringa-bread.jpg" alt="Golden crust" style="object-position:center 20%;filter:brightness(1.05) saturate(1.3) sepia(.1)">
+        <div class="gi-label">✨ Golden Crust</div>
+      </div>
+      <div class="gi">
+        <img src="https://seasiderecipes.com/wp-content/uploads/moringa-bread.jpg" alt="Top view" style="object-position:center 80%;filter:brightness(.95) saturate(1.4) hue-rotate(-5deg)">
+        <div class="gi-label">🌿 Moringa Green</div>
+      </div>
+      <div class="gi">
+        <img src="https://seasiderecipes.com/wp-content/uploads/moringa-bread.jpg" alt="Soft crumb" style="object-position:40% center;filter:brightness(1.02) saturate(1.2) contrast(1.05)">
+        <div class="gi-label">🥛 Soft & Fluffy</div>
+      </div>
+      <div class="gi">
+        <img src="https://seasiderecipes.com/wp-content/uploads/moringa-bread.jpg" alt="Served warm" style="object-position:60% 40%;filter:brightness(1.04) saturate(1.15) warmth(1.1)">
+        <div class="gi-label">☕ Serve Warm</div>
+      </div>
+    </div>
+    <div class="flavor-tags rv">
+      <div class="ftag">🌡️ Best served warm</div>
+      <div class="ftag">☕ Pairs with barako coffee</div>
+      <div class="ftag">🧈 Spread with butter</div>
+      <div class="ftag">🌿 Earthy moringa flavour</div>
+      <div class="ftag">💛 Soft, pillowy texture</div>
+      <div class="ftag">🍬 Lightly sweet</div>
+      <div class="ftag">🥛 Milky richness</div>
+    </div>
+  </section>
+
+  <!-- ══ RECIPE ══ -->
+  <section id="recipe">
+    <div class="sec-head rv">
+      <div class="sec-kicker">The Recipe</div>
+      <h2>Ingredients & Method</h2>
+      <p>Simple pantry staples, one miracle leaf, one incredible bread</p>
+    </div>
+    <div class="recipe-grid">
+      <!-- Ingredients -->
+      <div class="rbox rvl">
+        <div class="rbox-head">
+          <span style="font-size:1.5rem">🧺</span>
+          <div>
+            <h3>Ingredients</h3>
+            <p>Makes 12 pieces</p>
+          </div>
+        </div>
+        <div class="rbox-body">
+          <div class="ing"><span class="ing-e">🌿</span><span class="ing-name">Malunggay (Moringa) leaves</span><span class="ing-amt">1 cup</span></div>
+          <div class="ing"><span class="ing-e">🌾</span><span class="ing-name">All-purpose flour</span><span class="ing-amt">3 cups</span></div>
+          <div class="ing"><span class="ing-e">🧪</span><span class="ing-name">Instant yeast</span><span class="ing-amt">2¼ tsp</span></div>
+          <div class="ing"><span class="ing-e">🍬</span><span class="ing-name">White sugar</span><span class="ing-amt">¼ cup</span></div>
+          <div class="ing"><span class="ing-e">🧂</span><span class="ing-name">Fine salt</span><span class="ing-amt">1 tsp</span></div>
+          <div class="ing"><span class="ing-e">🧈</span><span class="ing-name">Unsalted butter, softened</span><span class="ing-amt">3 tbsp</span></div>
+          <div class="ing"><span class="ing-e">🥚</span><span class="ing-name">Large egg</span><span class="ing-amt">1 pc</span></div>
+          <div class="ing"><span class="ing-e">🥛</span><span class="ing-name">Warm milk (40°C)</span><span class="ing-amt">¾ cup</span></div>
+          <div class="ing"><span class="ing-e">🍞</span><span class="ing-name">Fine breadcrumbs</span><span class="ing-amt">½ cup</span></div>
+        </div>
+      </div>
+
+      <!-- Steps -->
+      <div class="rbox rvr">
+        <div class="rbox-head">
+          <span style="font-size:1.5rem">👨‍🍳</span>
+          <div>
+            <h3>Method</h3>
+            <p>Step-by-step instructions</p>
+          </div>
+        </div>
+        <div class="rbox-body">
+          <div class="step">
+            <div class="step-n">1</div>
+            <div class="step-body">
+              <strong><span>🌿</span> Prep Malunggay</strong>
+              <p>Wash leaves, strip from stems. Blanch 30 seconds in hot water, drain and pat dry.</p>
+              <div class="step-time">⏱ 5 min</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">2</div>
+            <div class="step-body">
+              <strong><span>🥣</span> Make the Dough</strong>
+              <p>Mix flour, yeast, sugar, salt. Add butter, egg, warm milk, and malunggay. Knead 8–10 min until smooth.</p>
+              <div class="step-time">⏱ 15 min</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">3</div>
+            <div class="step-body">
+              <strong><span>⏳</span> First Rise</strong>
+              <p>Cover with a damp cloth. Rest in a warm spot for 1 hour until doubled.</p>
+              <div class="step-time">⏱ 60 min</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">4</div>
+            <div class="step-body">
+              <strong><span>🍞</span> Shape & Coat</strong>
+              <p>Punch down, divide into 12 balls. Roll generously in breadcrumbs. Arrange on a tray.</p>
+              <div class="step-time">⏱ 10 min</div>
+            </div>
+          </div>
+          <div class="step" style="margin-bottom:0">
+            <div class="step-n" style="background:linear-gradient(135deg,var(--sage),var(--moss))">5</div>
+            <div class="step-body">
+              <strong><span>🔥</span> Bake</strong>
+              <p>Preheat oven to 180°C. Bake 20–25 min until deeply golden. Cool 5 min. Serve warm!</p>
+              <div class="step-time">⏱ 25 min</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chef-tip rv">
+      <div class="tip-emoji">👨‍🍳</div>
+      <div class="chef-tip-content">
+        <strong>Chef's Note</strong>
+        <p>For an extra soft crumb, substitute ¼ cup of the milk with fresh <em>coconut milk</em>. The fat content adds richness and a subtle sweetness that pairs beautifully with the earthy malunggay. Best eaten within 2 hours of baking — though in most Filipino homes, they're gone in minutes. ☕ Always serve with hot <em>barako</em> coffee.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ NUTRITION ══ -->
+  <section id="nutrition">
+    <div class="sec-head rv">
+      <div class="sec-kicker">Nutrition Per Piece</div>
+      <h2>Good Bread, Better For You</h2>
+      <p>Malunggay is called the "miracle leaf" for good reason — it supercharges every bite</p>
+    </div>
+    <div class="nut-grid">
+      <div class="nut-card rv" style="transition-delay:.05s">
+        <span class="nut-icon">🔥</span>
+        <div class="nut-val" id="cal">0</div>
+        <div class="nut-unit">kcal</div>
+        <div class="nut-lbl">Calories</div>
+        <div class="nut-bar"><div class="nut-bar-fill" id="bar-cal" style="width:60%"></div></div>
+      </div>
+      <div class="nut-card rv" style="transition-delay:.1s">
+        <span class="nut-icon">💪</span>
+        <div class="nut-val" id="pro">0</div>
+        <div class="nut-unit">grams</div>
+        <div class="nut-lbl">Protein</div>
+        <div class="nut-bar"><div class="nut-bar-fill" id="bar-pro" style="width:40%"></div></div>
+      </div>
+      <div class="nut-card rv" style="transition-delay:.15s">
+        <span class="nut-icon">🍊</span>
+        <div class="nut-val" id="vit">0</div>
+        <div class="nut-unit">% DV</div>
+        <div class="nut-lbl">Vitamin C</div>
+        <div class="nut-bar"><div class="nut-bar-fill" id="bar-vit" style="width:75%"></div></div>
+      </div>
+      <div class="nut-card rv" style="transition-delay:.2s">
+        <span class="nut-icon">🌿</span>
+        <div class="nut-val" id="iro">0</div>
+        <div class="nut-unit">% DV</div>
+        <div class="nut-lbl">Iron</div>
+        <div class="nut-bar"><div class="nut-bar-fill" id="bar-iro" style="width:55%"></div></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Malunggay Pandesal</div>
+    <div class="footer-sub">A beloved Filipino recipe by Daniel · 2026</div>
+    <div class="footer-line"></div>
+    <div class="footer-bottom">
+      Made with 🍞 🌿 ❤️ &nbsp;&mdash;&nbsp; <a href="#">Back to top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── Custom cursor ── */
+  const cur = document.getElementById('cur');
+  const ring = document.getElementById('ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  document.querySelectorAll('a,button,.gi,.ing,.rbox,.nut-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
+  });
+  (function tick() {
+    rx += (mx - rx) * .15; ry += (my - ry) * .15;
+    cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+    ring.style.left = rx + 'px'; ring.style.top  = ry + 'px';
+    requestAnimationFrame(tick);
+  })();
+
+  /* ── Scroll progress ── */
+  const prog = document.getElementById('prog');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+    prog.style.transform = `scaleX(${pct})`;
+  });
+
+  /* ── Hero parallax ── */
+  const heroImg = document.getElementById('hero-img');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY < window.innerHeight) {
+      heroImg.style.transform = `translateY(${window.scrollY * .35}px)`;
+    }
+  });
+
+  /* ── Smooth scroll ── */
+  function goTo(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ── Active nav ── */
+  const navSecs = ['story','gallery','recipe','nutrition'];
+  const navBtns = document.querySelectorAll('.snav-btn');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    navSecs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < window.innerHeight * .5) cur = id;
+    });
+    navBtns.forEach((b, i) => b.classList.toggle('active', i === navSecs.indexOf(cur)));
+  });
+
+  /* ── Scroll reveal ── */
+  const revObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.rv,.rvl,.rvr').forEach(el => revObs.observe(el));
+
+  /* ── Nutrition counters + bars ── */
+  const nutData = { cal:148, pro:5, vit:22, iro:18 };
+  let nutDone = false;
+  new IntersectionObserver(entries => {
+    if (!entries[0].isIntersecting || nutDone) return;
+    nutDone = true;
+    Object.entries(nutData).forEach(([id, target]) => {
+      let n = 0, step = Math.ceil(target / 48);
+      const el = document.getElementById(id);
+      const t = setInterval(() => {
+        n = Math.min(n + step, target);
+        el.textContent = n;
+        if (n >= target) clearInterval(t);
+      }, 26);
+    });
+    document.querySelectorAll('.nut-bar-fill').forEach(bar => {
+      bar.style.transform = 'scaleX(1)';
+    });
+  }, { threshold: 0.3 }).observe(document.getElementById('nutrition'));
+
+  /* ── Gallery hover glow follow (mouse light on images) ── */
+  document.querySelectorAll('.gi').forEach(gi => {
+    gi.addEventListener('mousemove', e => {
+      const r = gi.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width  * 100).toFixed(1);
+      const y = ((e.clientY - r.top)  / r.height * 100).toFixed(1);
+      gi.style.setProperty('--gx', x + '%');
+      gi.style.setProperty('--gy', y + '%');
+    });
+  });
+</script>
+</body>
+</html>
